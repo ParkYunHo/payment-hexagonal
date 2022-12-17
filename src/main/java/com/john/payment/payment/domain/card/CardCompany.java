@@ -9,6 +9,6 @@ import jakarta.persistence.Table;
 @Table(name = "CARD_COMPANY")
 public class CardCompany {
     @Id
-    @Column(name = "TRANSACTION_ID", columnDefinition = "트랜잭션 ID")
+    @Column(name = "TRANSACTION_ID")
     private String transactionId;
 }
