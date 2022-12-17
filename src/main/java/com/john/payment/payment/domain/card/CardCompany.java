@@ -1,4 +1,4 @@
-package com.john.payment.domain.card;
+package com.john.payment.payment.domain.card;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
