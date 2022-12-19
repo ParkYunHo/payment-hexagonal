@@ -2,6 +2,7 @@ package com.john.payment.common.handler;
 
 import com.john.payment.common.dto.BaseResponse;
 import com.john.payment.common.exception.BadRequestException;
+import com.john.payment.common.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -28,4 +29,10 @@ public class PaymentExceptionHandler {
         return new BaseResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BaseResponse notFoundException(HttpServletRequest request, NotFoundException e) {
+        return new BaseResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

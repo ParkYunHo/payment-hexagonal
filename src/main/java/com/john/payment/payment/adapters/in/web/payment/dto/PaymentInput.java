@@ -9,6 +9,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class InquiryInput {
-    String mngNo;
+public class PaymentInput {
+    Long cardNo;
+    Long expiryDate;
+    Long cvc;
+    Long installMonths;
+    Long price;
+    Long vat;
 }

@@ -12,7 +12,8 @@ public interface InquiryUseCase {
         String status,
         Long price,
         Long vat,
-        Long installMonths,
-        String cardInfo
+        String cardNo,
+        Long expiryDate,
+        Long cvc
     ) { }
 }

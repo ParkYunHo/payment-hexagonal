@@ -3,6 +3,7 @@ package com.john.payment.payment.adapters.in.web.payment;
 import com.john.payment.common.BaseController;
 import com.john.payment.common.dto.BaseResponse;
 import com.john.payment.payment.adapters.in.web.payment.dto.InquiryInput;
+import com.john.payment.payment.adapters.in.web.payment.dto.PaymentInput;
 import com.john.payment.payment.application.port.in.CancelUsecase;
 import com.john.payment.payment.application.port.in.InquiryUseCase;
 import com.john.payment.payment.application.port.in.PaymentUseCase;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,13 +27,14 @@ public class PaymentController extends BaseController {
 
     @GetMapping("/pay")
     public BaseResponse inquiry(InquiryInput input) {
-        var result = inquiryUseCase.inquiryAccount(input.mngId());
+        var result = inquiryUseCase.inquiryAccount(input.getMngNo());
         return new BaseResponse().success(result);
     }
 
     @PostMapping("/pay")
-    public BaseResponse payment() {
-        return new BaseResponse().success(null);
+    public BaseResponse payment(@RequestBody PaymentInput input) {
+        var result = paymentUseCase.paymentAccount(input);
+        return new BaseResponse().success(result);
     }
 
     @PutMapping("/pay")
