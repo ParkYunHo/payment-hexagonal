@@ -5,7 +5,7 @@ package com.john.payment.payment.application.port.in;
  * @since 2022.12.18
  */
 public interface InquiryUseCase {
-    InquiryDto inquiryAccount(String mngId);
+    InquiryDto inquiryAccount(String mngId, int size);
 
     record InquiryDto(
         String mngNo,

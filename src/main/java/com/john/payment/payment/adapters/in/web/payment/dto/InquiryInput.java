@@ -11,4 +11,5 @@ import lombok.Setter;
 @Setter
 public class InquiryInput {
     String mngNo;
+    int size;
 }

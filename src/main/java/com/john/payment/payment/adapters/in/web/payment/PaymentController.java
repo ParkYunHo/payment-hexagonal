@@ -27,7 +27,7 @@ public class PaymentController extends BaseController {
 
     @GetMapping("/pay")
     public BaseResponse inquiry(InquiryInput input) {
-        var result = inquiryUseCase.inquiryAccount(input.getMngNo());
+        var result = inquiryUseCase.inquiryAccount(input.getMngNo(), input.getSize());
         return new BaseResponse().success(result);
     }
 

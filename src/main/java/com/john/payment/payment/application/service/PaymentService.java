@@ -11,6 +11,7 @@ import com.john.payment.payment.application.port.in.InquiryUseCase;
 import com.john.payment.payment.application.port.in.PaymentUseCase;
 import com.john.payment.payment.domain.payment.Payment;
 import com.john.payment.payment.domain.payment.PaymentRepository;
+import com.john.payment.payment.domain.payment.PaymentRepositoryDsl;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +27,11 @@ import org.springframework.stereotype.Service;
 public class PaymentService implements PaymentUseCase, CancelUsecase, InquiryUseCase {
 
     private final PaymentRepository paymentRepository;
+    private final PaymentRepositoryDsl paymentRepositoryDsl;
 
     @Override
-    public InquiryDto inquiryAccount(String mngNo) {
-        var inquiry = paymentRepository.findById(mngNo).orElseThrow(() ->
+    public InquiryDto inquiryAccount(String mngNo, int size) {
+        var inquiry = paymentRepositoryDsl.findByIdWithLimit(mngNo, size).orElseThrow(() ->
             new NotFoundException("결제정보를 조회할 수 없습니다.")
         );
 
