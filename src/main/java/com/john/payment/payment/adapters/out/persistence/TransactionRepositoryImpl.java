@@ -1,4 +1,4 @@
-package com.john.payment.payment.domain.payment;
+package com.john.payment.payment.adapters.out.persistence;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
@@ -8,21 +8,20 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author john.09
- * @since 2022.12.19
+ * @since 2022.12.20
  */
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class PaymentRepositoryImpl implements PaymentRepositoryDsl {
-
+public class TransactionRepositoryImpl implements TransactionRepositoryDsl {
     private final JPAQueryFactory jpaQuery;
 
     @Override
-    public Optional<Payment> findByIdWithLimit(String mngNo, int size) {
+    public Optional<TransactionEntity> findByIdWithLimit(String mngNo, int size) {
         return Optional.ofNullable(
             jpaQuery
-                .selectFrom(QPayment.payment)
-                .where(QPayment.payment.mngNo.eq(mngNo))
+                .selectFrom(QTransactionEntity.transactionEntity)
+                .where(QTransactionEntity.transactionEntity.mngNo.eq(mngNo))
                 .limit(size)
                 .fetchFirst()
         );

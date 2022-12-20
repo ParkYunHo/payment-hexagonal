@@ -1,16 +1,12 @@
 package com.john.payment.payment.application.port.in;
 
-import com.john.payment.payment.adapters.in.web.payment.dto.PaymentInput;
+import com.john.payment.payment.adapters.in.web.dto.PaymentInput;
+import com.john.payment.payment.domain.Transaction;
 
 /**
  * @author john.09
  * @since 2022.12.18
  */
 public interface PaymentUseCase {
-    PaymentDto payment(PaymentInput input);
-
-    record PaymentDto(
-        String mngNo,
-        String transactionId
-    ) {}
+    Transaction payment(PaymentInput input);
 }

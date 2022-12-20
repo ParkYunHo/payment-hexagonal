@@ -1,24 +1,27 @@
-package com.john.payment.payment.domain.payment;
+package com.john.payment.payment.adapters.out.persistence;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
  * @author john.09
- * @since 2022.12.18
+ * @since 2022.12.20
  */
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Entity
 @Table(name = "PAYMENT_TRANSACTION")
-public class Payment {
+public class TransactionEntity {
     @Id
     @Column(name = "MNG_NO", nullable = false)
     private String mngNo;

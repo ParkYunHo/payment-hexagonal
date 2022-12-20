@@ -1,4 +1,4 @@
-package com.john.payment.payment.adapters.in.web.payment.dto;
+package com.john.payment.payment.adapters.in.web.dto;
 
 import lombok.Getter;
 import lombok.Setter;

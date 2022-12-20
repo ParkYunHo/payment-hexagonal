@@ -1,10 +1,10 @@
-package com.john.payment.payment.adapters.in.web.payment;
+package com.john.payment.payment.adapters.in.web;
 
 import com.john.payment.common.BaseController;
 import com.john.payment.common.dto.BaseResponse;
-import com.john.payment.payment.adapters.in.web.payment.dto.CancelInput;
-import com.john.payment.payment.adapters.in.web.payment.dto.InquiryInput;
-import com.john.payment.payment.adapters.in.web.payment.dto.PaymentInput;
+import com.john.payment.payment.adapters.in.web.dto.CancelInput;
+import com.john.payment.payment.adapters.in.web.dto.InquiryInput;
+import com.john.payment.payment.adapters.in.web.dto.PaymentInput;
 import com.john.payment.payment.application.port.in.CancelUsecase;
 import com.john.payment.payment.application.port.in.InquiryUseCase;
 import com.john.payment.payment.application.port.in.PaymentUseCase;
