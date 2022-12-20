@@ -7,7 +7,7 @@ import com.john.payment.payment.adapters.in.web.payment.dto.PaymentInput;
  * @since 2022.12.18
  */
 public interface PaymentUseCase {
-    PaymentDto paymentAccount(PaymentInput input);
+    PaymentDto payment(PaymentInput input);
 
     record PaymentDto(
         String mngNo,

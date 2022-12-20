@@ -1,8 +1,6 @@
 package com.john.payment.common.utils;
 
 import com.john.payment.common.exception.BadRequestException;
-import jakarta.annotation.PostConstruct;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -28,17 +26,32 @@ public class CipherUtils {
         }
     }
 
+    /**
+     * 암호화
+     *
+     * @param value {@link String}
+     * @return encrypted value {@link String}
+     * @author yoonho
+     * @since 2022.12.20
+     */
     public static String encode(String value) {
         try{
             cipher.init(Cipher.ENCRYPT_MODE, keySpec);
             return new String(Base64.encodeBase64(cipher.doFinal(value.getBytes()), false), StandardCharsets.UTF_8);
-//            return Base64.encodeBase64String(cipher.doFinal(value.getBytes()));
         }catch (Exception e){
             log.error(" >>> [encode] Exception occurs - message: {}", e.getMessage());
             throw new BadRequestException("암호화 실패");
         }
     }
 
+    /**
+     * 복호화
+     *
+     * @param value {@link String}
+     * @return decrypted value {@link String}
+     * @author yoonho
+     * @since 2022.12.20
+     */
     public static String decode(String value) {
         try{
             cipher.init(Cipher.DECRYPT_MODE, keySpec);

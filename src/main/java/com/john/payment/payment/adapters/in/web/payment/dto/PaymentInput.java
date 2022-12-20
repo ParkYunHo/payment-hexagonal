@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentInput {
-    Long cardNo;
-    Long expiryDate;
-    Long cvc;
-    Long installMonths;
-    Long price;
-    Long vat;
+    private Long cardNo;
+    private Long expiryDate;
+    private Long cvc;
+    private Long installMonths;
+    private Long price;
+    private Long vat;
 }

@@ -5,5 +5,10 @@ package com.john.payment.payment.application.port.in;
  * @since 2022.12.18
  */
 public interface CancelUsecase {
+    CancelDto cancel(String mngNo, Long price, Long vat);
 
+    record CancelDto(
+        String mngNo,
+        String transactionId
+    ) {}
 }

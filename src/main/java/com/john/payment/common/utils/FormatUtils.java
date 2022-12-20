@@ -1,6 +1,5 @@
 package com.john.payment.common.utils;
 
-import com.john.payment.common.exception.BadRequestException;
 import java.util.Map;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FormatUtils {
 
+    /**
+     * 카드객체를 문자열로 변환
+     *
+     * @param cardNo {@link Long}
+     * @param expiryDate {@link Long}
+     * @param cvc {@link Long}
+     * @return result {@link String}
+     * @author yoonho
+     * @since 2022.12.20
+     */
     public static String setCardInfoToString(Long cardNo, Long expiryDate, Long cvc) {
         return new StringBuffer()
             .append(cardNo).append(":")
@@ -20,6 +29,14 @@ public class FormatUtils {
             .toString();
     }
 
+    /**
+     * 문자열을 카드객체로 변환
+     *
+     * @param cardInfo {@link String}
+     * @return result {@link Map}
+     * @author yoonho
+     * @since 2022.12.20
+     */
     public static Map<String, Long> setStringToCardInfo(String cardInfo) {
         var splitCardInfo = cardInfo.split(":");
         return Map.of(
@@ -29,6 +46,16 @@ public class FormatUtils {
         );
     }
 
+    /**
+     * 카드문자열정보 마스킹처리
+     *
+     * @param value {@link String}
+     * @param start {@link Integer}
+     * @param size {@link Integer}
+     * @return result {@link String}
+     * @author yoonho
+     * @since 2022.12.20
+     */
     public static String masking(String value, int start, int size) {
         if(value.length() < (start + size)) {
             return value;

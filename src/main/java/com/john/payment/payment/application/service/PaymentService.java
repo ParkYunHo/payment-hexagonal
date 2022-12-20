@@ -29,8 +29,17 @@ public class PaymentService implements PaymentUseCase, CancelUsecase, InquiryUse
     private final PaymentRepository paymentRepository;
     private final PaymentRepositoryDsl paymentRepositoryDsl;
 
+    /**
+     * 트랜잭션 조회
+     *
+     * @param mngNo {@link String}
+     * @param size {@link Integer}
+     * @return result {@link InquiryDto}
+     * @author john.09
+     * @since 2022.12.20
+     */
     @Override
-    public InquiryDto inquiryAccount(String mngNo, int size) {
+    public InquiryDto inquiry(String mngNo, int size) {
         var inquiry = paymentRepositoryDsl.findByIdWithLimit(mngNo, size).orElseThrow(() ->
             new NotFoundException("결제정보를 조회할 수 없습니다.")
         );
@@ -52,12 +61,20 @@ public class PaymentService implements PaymentUseCase, CancelUsecase, InquiryUse
         }catch (BadRequestException be) {
             throw be;
         }catch (Exception e){
-            throw new BadRequestException("");
+            throw new BadRequestException();
         }
     }
 
+    /**
+     * 결제정보 저장
+     *
+     * @param input {@link PaymentInput}
+     * @return result {@link PaymentDto}
+     * @author john.09
+     * @since 2022.12.20
+     */
     @Override
-    public PaymentDto paymentAccount(PaymentInput input) {
+    public PaymentDto payment(PaymentInput input) {
         try{
             String mngNo = UUID.randomUUID().toString();
             String cardInfo = FormatUtils.setCardInfoToString(input.getCardNo(), input.getExpiryDate(), input.getCvc());
@@ -76,6 +93,40 @@ public class PaymentService implements PaymentUseCase, CancelUsecase, InquiryUse
             throw be;
         }catch (Exception e) {
             throw new BadRequestException("");
+        }
+    }
+
+    /**
+     * 결제정보 취소
+     *
+     * @param mngNo {@link String}
+     * @param price {@link Long}
+     * @param vat {@link Long}
+     * @return result {@link CancelDto}
+     * @author john.09
+     * @since 2022.12.20
+     */
+    @Override
+    public CancelDto cancel(String mngNo, Long price, Long vat) {
+        var inquiry = paymentRepository.findById(mngNo).orElseThrow(() ->
+            new NotFoundException("결제정보를 조회할 수 없습니다.")
+        );
+
+        try{
+            Payment payment = new Payment();
+            payment.setMngNo(mngNo);
+            payment.setStatus(Status.CANCEL.getCode());
+            payment.setPrice(inquiry.getPrice());
+            payment.setVat(inquiry.getVat());
+            payment.setInstallMonths(0L);
+            payment.setCardInfo(inquiry.getCardInfo());
+            paymentRepository.save(payment);
+
+            return new CancelDto(inquiry.getMngNo(), "");
+        }catch (BadRequestException be) {
+            throw be;
+        }catch (Exception e){
+            throw new BadRequestException();
         }
     }
 }

@@ -9,7 +9,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class InquiryInput {
+public class CancelInput {
     private String mngNo;
-    private int size;
+    private Long price;
+    private Long vat;
 }

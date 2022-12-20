@@ -2,6 +2,7 @@ package com.john.payment.payment.adapters.in.web.payment;
 
 import com.john.payment.common.BaseController;
 import com.john.payment.common.dto.BaseResponse;
+import com.john.payment.payment.adapters.in.web.payment.dto.CancelInput;
 import com.john.payment.payment.adapters.in.web.payment.dto.InquiryInput;
 import com.john.payment.payment.adapters.in.web.payment.dto.PaymentInput;
 import com.john.payment.payment.application.port.in.CancelUsecase;
@@ -25,20 +26,45 @@ public class PaymentController extends BaseController {
     private final CancelUsecase cancelUsecase;
     private final InquiryUseCase inquiryUseCase;
 
+    /**
+     * 트랜잭션 조회
+     *
+     * @param input {@link InquiryInput}
+     * @return result {@link BaseResponse}
+     * @author john.09
+     * @since 2022.12.20
+     */
     @GetMapping("/pay")
     public BaseResponse inquiry(InquiryInput input) {
-        var result = inquiryUseCase.inquiryAccount(input.getMngNo(), input.getSize());
+        var result = inquiryUseCase.inquiry(input.getMngNo(), input.getSize());
         return new BaseResponse().success(result);
     }
 
+    /**
+     * 결제정보 저장
+     *
+     * @param input {@link PaymentInput}
+     * @return result {@link BaseResponse}
+     * @author john.09
+     * @since 2022.12.20
+     */
     @PostMapping("/pay")
     public BaseResponse payment(@RequestBody PaymentInput input) {
-        var result = paymentUseCase.paymentAccount(input);
+        var result = paymentUseCase.payment(input);
         return new BaseResponse().success(result);
     }
 
+    /**
+     * 결제정보 취소
+     *
+     * @param input {@link CancelInput}
+     * @return result {@link BaseResponse}
+     * @author john.09
+     * @since 2022.12.20
+     */
     @PutMapping("/pay")
-    public BaseResponse cancel() {
-        return new BaseResponse().success(null);
+    public BaseResponse cancel(@RequestBody CancelInput input) {
+        var result = cancelUsecase.cancel(input.getMngNo(), input.getPrice(), input.getVat());
+        return new BaseResponse().success(result);
     }
 }
