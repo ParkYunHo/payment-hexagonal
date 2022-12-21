@@ -2,9 +2,14 @@ package com.john.payment.payment.application.service;
 
 import com.john.payment.common.constants.CommCode.Status;
 import com.john.payment.common.exception.BadRequestException;
+import com.john.payment.common.exception.NotFoundException;
 import com.john.payment.common.utils.CipherUtils;
 import com.john.payment.common.utils.FormatUtils;
 import com.john.payment.payment.adapters.in.web.dto.PaymentInput;
+import com.john.payment.payment.adapters.out.persistence.TransactionMapper;
+import com.john.payment.payment.application.dto.CancelDto;
+import com.john.payment.payment.application.dto.InquiryDto;
+import com.john.payment.payment.application.dto.PaymentDto;
 import com.john.payment.payment.application.port.in.CancelUsecase;
 import com.john.payment.payment.application.port.in.InquiryUseCase;
 import com.john.payment.payment.application.port.in.PaymentUseCase;
@@ -15,6 +20,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author john.09
@@ -26,6 +32,7 @@ import org.springframework.stereotype.Service;
 public class TransactionService implements InquiryUseCase, PaymentUseCase, CancelUsecase {
     private final InquiryPort inquiryPort;
     private final SavePort savePort;
+    private final TransactionMapper mapper;
 
     /**
      * 트랜잭션 조회
@@ -37,18 +44,30 @@ public class TransactionService implements InquiryUseCase, PaymentUseCase, Cance
      * @since 2022.12.20
      */
     @Override
-    public Transaction inquiry(String mngNo, int size) {
-        var transaction = inquiryPort.findTransaction(mngNo, size);
-
+    public InquiryDto inquiry(String mngNo, int size) {
         try{
-            var cardInfo = CipherUtils.decode(transaction.getCardInfo());
+            var entity = inquiryPort.findTransactionEntity(mngNo, size);
+
+            var cardInfo = CipherUtils.decode(entity.getCardInfo());
             var cardInfoMap = FormatUtils.setStringToCardInfo(cardInfo);
             var maskedCardNo = FormatUtils.masking(String.valueOf(cardInfoMap.get("cardNo")), 6, 3);
+            var subMngNo = entity.getCancelMngNo().stream().map(x -> x.getMngNo()).toList();
 
-            return transaction;
-        }catch (BadRequestException be) {
+            return InquiryDto.builder()
+                .mngNo(entity.getMngNo())
+                .cardNo(maskedCardNo)
+                .expiryDate(cardInfoMap.get("expiryDate"))
+                .cvc(cardInfoMap.get("cvc"))
+                .status(entity.getStatus())
+                .price(entity.getPrice())
+                .vat(entity.getVat())
+                .subMngNo(subMngNo)
+                .build();
+        } catch (NotFoundException ne) {
+            throw ne;
+        } catch (BadRequestException be) {
             throw be;
-        }catch (Exception e){
+        } catch (Exception e){
             throw new BadRequestException();
         }
     }
@@ -62,10 +81,10 @@ public class TransactionService implements InquiryUseCase, PaymentUseCase, Cance
      * @since 2022.12.20
      */
     @Override
-    public Transaction payment(PaymentInput input) {
+    public PaymentDto payment(PaymentInput input) {
         try{
             String mngNo = UUID.randomUUID().toString();
-            String cardInfo = FormatUtils.setCardInfoToString(input.getCardNo(), input.getExpiryDate(), input.getCvc());
+            String cardInfo = FormatUtils.setCardInfoToString(String.valueOf(input.getCardNo()), input.getExpiryDate(), input.getCvc());
 
             Transaction transaction = Transaction.builder()
                 .mngNo(mngNo)
@@ -77,7 +96,9 @@ public class TransactionService implements InquiryUseCase, PaymentUseCase, Cance
                 .build();
             savePort.saveTransaction(transaction);
 
-            return transaction;
+            return PaymentDto.builder()
+                .mngNo(mngNo)
+                .build();
         }catch (BadRequestException be) {
             throw be;
         }catch (Exception e) {
@@ -88,7 +109,7 @@ public class TransactionService implements InquiryUseCase, PaymentUseCase, Cance
     /**
      * 결제정보 취소
      *
-     * @param mngNo {@link String}
+     * @param payMngNo {@link String}
      * @param price {@link Long}
      * @param vat {@link Long}
      * @return result {@link Transaction}
@@ -96,21 +117,31 @@ public class TransactionService implements InquiryUseCase, PaymentUseCase, Cance
      * @since 2022.12.20
      */
     @Override
-    public Transaction cancel(String mngNo, Long price, Long vat) {
-        var transaction = inquiryPort.findTransaction(mngNo, 1);
-
+    @Transactional
+    public CancelDto cancel(String payMngNo, Long price, Long vat) {
         try{
+            var payEntity = inquiryPort.findTransactionEntity(payMngNo, 1);
+            String mngNo = UUID.randomUUID().toString();
+
+            // 결제취소 트랜잭션 저장
             Transaction cancelTransaction = Transaction.builder()
                 .mngNo(mngNo)
                 .status(Status.CANCEL.getCode())
-                .price(transaction.getPrice())
-                .vat(transaction.getVat())
+                .price(price)
+                .vat(vat)
                 .installMonths(0L)
-                .cardInfo(transaction.getCardInfo())
+                .cardInfo(payEntity.getCardInfo())
                 .build();
-            savePort.saveTransaction(cancelTransaction);
+            savePort.saveTransaction(cancelTransaction, payEntity);
 
-            return transaction;
+            // 결제 트랜잭션 업데이트
+            payEntity.setPrice(0L);
+            payEntity.setVat(0L);
+            savePort.saveTransaction(mapper.toDomain(payEntity));
+
+            return CancelDto.builder()
+                .mngNo(mngNo)
+                .build();
         }catch (BadRequestException be) {
             throw be;
         }catch (Exception e){

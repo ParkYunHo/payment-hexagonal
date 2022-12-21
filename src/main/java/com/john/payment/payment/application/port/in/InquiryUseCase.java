@@ -1,5 +1,6 @@
 package com.john.payment.payment.application.port.in;
 
+import com.john.payment.payment.application.dto.InquiryDto;
 import com.john.payment.payment.domain.Transaction;
 
 /**
@@ -7,5 +8,5 @@ import com.john.payment.payment.domain.Transaction;
  * @since 2022.12.18
  */
 public interface InquiryUseCase {
-    Transaction inquiry(String mngNo, int size);
+    InquiryDto inquiry(String mngNo, int size);
 }

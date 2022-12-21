@@ -21,7 +21,7 @@ public class FormatUtils {
      * @author yoonho
      * @since 2022.12.20
      */
-    public static String setCardInfoToString(Long cardNo, Long expiryDate, Long cvc) {
+    public static String setCardInfoToString(String cardNo, Long expiryDate, Long cvc) {
         return new StringBuffer()
             .append(cardNo).append(":")
             .append(expiryDate).append(":")

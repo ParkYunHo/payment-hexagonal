@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransactionMapper {
 
+    /**
+     * Entity에서 Domain으로 변환
+     *
+     * @param entity {@link TransactionEntity}
+     * @return domain {@link Transaction}
+     */
     public Transaction toDomain(TransactionEntity entity) {
         return Transaction.builder()
             .mngNo(entity.getMngNo())
@@ -21,7 +27,24 @@ public class TransactionMapper {
             .build();
     }
 
+    /**
+     * Domain에서 Entity로 변환
+     *
+     * @param domain {@link Transaction}
+     * @return entity {@link TransactionEntity}
+     */
     public TransactionEntity toEntity(Transaction domain) {
+        return this.toEntity(domain, null);
+    }
+
+    /**
+     * Domain에서 Entity로 변환
+     *
+     * @param domain {@link Transaction}
+     * @param payEntity {@link TransactionEntity}
+     * @return entity {@link TransactionEntity}
+     */
+    public TransactionEntity toEntity(Transaction domain, TransactionEntity payEntity) {
         return TransactionEntity.builder()
             .mngNo(domain.getMngNo())
             .status(domain.getStatus())
@@ -29,6 +52,7 @@ public class TransactionMapper {
             .vat(domain.getVat())
             .installMonths(domain.getInstallMonths())
             .cardInfo(domain.getCardInfo())
+            .payMngNo(payEntity)
             .build();
     }
 }

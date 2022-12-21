@@ -7,8 +7,8 @@ package com.john.payment.common.constants;
 public class CommCode {
 
     public enum Status {
-        PAYMENT("payment"),
-        CANCEL("cancel");
+        PAYMENT("PAYMENT"),
+        CANCEL("CANCEL");
 
         String code;
 

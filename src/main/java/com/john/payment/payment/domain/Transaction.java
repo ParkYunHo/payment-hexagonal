@@ -1,21 +1,29 @@
 package com.john.payment.payment.domain;
 
 
-import com.john.payment.payment.adapters.in.web.dto.PaymentInput;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
- * @implNote DDD의 도메인은 pojo방식으로 구성
+ * @implNote DDD의 도메인은 pojo방식으로 구성, 도메인명은 동사로 명명해야되지만 우선 Transaction으로 명칭함
  *
  * @author john.09
  * @since 2022.12.18
  */
+@NoArgsConstructor
 public class Transaction {
+    @Getter
     private String mngNo;
+    @Getter
     private String status;
+    @Getter
     private Long price;
+    @Getter
     private Long vat;
+    @Getter
     private Long installMonths;
+    @Getter
     private String cardInfo;
 
     @Builder
@@ -27,37 +35,4 @@ public class Transaction {
         this.installMonths = installMonths;
         this.cardInfo = cardInfo;
     }
-
-    // Getter
-    public String getMngNo() {
-        return mngNo;
-    }
-    public String getStatus() {
-        return status;
-    }
-    public Long getPrice() {
-        return price;
-    }
-    public Long getVat() {
-        return vat;
-    }
-    public Long getInstallMonths() {
-        return installMonths;
-    }
-    public String getCardInfo() {
-        return cardInfo;
-    }
-
-//    // Behavior
-//    public void inquiry(String mngNo, int size) {
-//
-//    }
-//
-//    public void payment(PaymentInput input) {
-//
-//    }
-//
-//    public void cancel(String mngNo, Long price, Long vat) {
-//
-//    }
 }
