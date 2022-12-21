@@ -47,7 +47,7 @@ public class TransactionEntity {
     @Column(name = "CARD_INFO")
     private String cardInfo;
 
-    @OneToMany(mappedBy = "subMngNo")
+    @OneToMany(mappedBy = "payMngNo")
     private List<TransactionEntity> cancelMngNo;
 
     @ManyToOne
